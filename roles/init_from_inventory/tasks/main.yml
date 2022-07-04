@@ -1,39 +1,47 @@
 ---
 # tasks file for hs.init_from_inventory
 - name: 'Update User @ HS-Admin'
-  hs_admin:
+  general:
     hs_module: user
     hs_name: "{{ inventory_hostname }}"
     comment: '1 Testaccount via ansible'
-    password: 'N/4AtWf<(JV5B,R'
+    password: "{{ hostvars[inventory_hostname].pass }}"
     shell: '/bin/bash'
 
 - name: 'Update Domain @ HS Admin'
-  hs_admin:
+  general:
     hs_module: domain
     hs_name: "{{ hostvars[inventory_hostname].domain }}"
     user: "{{ inventory_hostname }}"
   when: hostvars[inventory_hostname].domain is defined
 
-- name: 'Update domain options æ HS Admin'
-  hs_admin:
-    hs_module: domain
-    hs_name: "{{ hostvars[inventory_hostname].domain }}"
-    state: force-update
-    validsubdomainnames: ''
-    domainoptions:
-      - letsencrypt
-      - multiviews
-
-- name: 'Update Database User @ HS-Admin'
-  hs_admin:
+- name: 'Update Mysql-Database User @ HS-Admin'
+  general:
     hs_module: mysqluser
     hs_name: "{{ hostvars[inventory_hostname].mysql.user }}"
     password: "{{ hostvars[inventory_hostname].mysql.pass }}"
   when: hostvars[inventory_hostname].mysql.user is defined and hostvars[inventory_hostname].mysql.pass is defined
-- name: 'Update Database Table'
-  hs_admin:
+
+- name: 'Update Mysql-Database Table @ HS-Admin'
+  general:
     hs_module: mysqldb
     hs_name: "{{ hostvars[inventory_hostname].mysql.table }}"
     owner: "{{ hostvars[inventory_hostname].mysql.user }}"
   when: hostvars[inventory_hostname].mysql.table is defined and hostvars[inventory_hostname].mysql.user is defined
+
+- name: 'Update Postgres Database User @ HS-Admin'
+  general:
+    hs_module: postgresqluser
+    hs_name: "{{ hostvars[inventory_hostname].mysql.user }}"
+    password: "{{ hostvars[inventory_hostname].mysql.pass }}"
+  when: hostvars[inventory_hostname].postgres.user is defined and hostvars[inventory_hostname].postgres.pass is defined
+
+- name: 'Update Mysql-Database Table @ HS-Admin'
+  general:
+    hs_module: postgresqldb
+    hs_name: "{{ hostvars[inventory_hostname].mysql.table }}"
+    owner: "{{ hostvars[inventory_hostname].mysql.user }}"
+  when: hostvars[inventory_hostname].postgres.table is defined and hostvars[inventory_hostname].postgres.user is defined
+
+- name: Gathering Facts
+  setup:

@@ -1,0 +1,32 @@
+---
+# tasks file for cleanup_subdirs
+- name: 'Update domain options @ HS Admin'
+  general:
+    hs_module: domain
+    hs_name: "{{ hostvars[inventory_hostname].domain }}"
+    validsubdomainnames: ''
+    domainoptions:
+      - letsencrypt
+      - multiviews
+
+- name: Delete Subdomains
+  file:
+    state: absent
+    path: "~/doms/{{ hostvars[inventory_hostname].domain }}/{{ item }}/"
+  with_items:
+    - subs
+    - subs-ssl
+
+- name: Read htdocs-ssl stats
+  stat:
+    path: "~/doms/{{ hostvars[inventory_hostname].domain }}/htdocs-ssl"
+  register: htdocsssl
+
+- name: Delete htdocs-ssl if not a link
+  when: htdocsssl.stat.islnk is defined and not htdocsssl.stat.islnk
+  file:
+    state: absent
+    path: "~/doms/{{ hostvars[inventory_hostname].domain }}/{{ item }}/"
+  with_items:
+    - htdocs-ssl
+    - htdocs-ssl/.htaccess

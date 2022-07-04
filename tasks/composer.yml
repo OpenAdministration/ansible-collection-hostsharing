@@ -1,0 +1,24 @@
+- name: download composer.phar
+  shell: curl -sS https://getcomposer.org/installer | php
+  args:
+    chdir: "{{ app_path }}"
+    creates: "{{ app_path }}/composer.phar"
+    warn: false
+  register: composerPhar
+
+- name: composer self-update
+  community.general.composer:
+    command: self-update
+    working_dir: "{{ app_path }}"
+    composer_executable: "{{ app_path }}/composer.phar"
+    executable: /usr/bin/php8.0
+  when: git.changed and not composerPhar.changed
+
+- name: install from composer.lock
+  community.general.composer:
+    command: install
+    working_dir: "{{ app_path }}"
+    no_dev: yes
+    composer_executable: "{{ app_path }}/composer.phar"
+    executable: /usr/bin/php8.0
+  when: git.changed

@@ -1,0 +1,29 @@
+---
+# tasks file for nodejs
+- name: download nvm installer
+  get_url:
+    url: https://raw.githubusercontent.com/creationix/nvm/{{ nvm_release }}/install.sh
+    dest: ~/install-nvm.sh
+    mode: 0700
+- name: run nvm installer
+  shell: |
+      touch ~/.profile
+      chmod a+x ~/.profile
+      ~/install-nvm.sh
+  args:
+      executable: /bin/bash
+      chdir: "~"
+      creates: "~/.nvm"
+- name: remove nvm installer
+  file:
+    path: ~/install-nvm.sh
+    state: absent
+- name: install node.js
+  shell: |
+      . ~/.profile
+      nvm install {{noderelease}}
+      nvm alias default {{noderelease}}
+  args:
+      executable: /bin/bash
+      chdir: "~"
+      creates: "~/.nvm/versions/node/{{ nodeversion }}/bin/node"

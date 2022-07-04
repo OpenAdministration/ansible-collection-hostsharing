@@ -1,0 +1,59 @@
+{
+    "dbConnection": {
+        "dsn": "mysql:host=;dbname={{ dbname }}",
+        "emulatePrepare": true,
+        "username": "{{ dbuser }}",
+        "password": "{{ dbpass }}",
+        "charset": "utf8mb4"
+    },
+    "siteSubdomain": "std",
+    "redis": null,
+    "prettyUrl": true,
+    "tablePrefix": "",
+    "resourceBase": "\/",
+    "baseLanguage": "de",
+    "randomSeed": "{{ seed }}",
+    "multisiteMode": false,
+    "domainPlain": "https:\/\/{{ domain }}\/",
+    "domainSubdomain": "",
+    "cookieDomain": null,
+    "hasSaml": false,
+    "samlOrgaFile": null,
+    "prependWWWToSubdomain": true,
+    "confirmEmailAddresses": true,
+    "dataPrivacyCheckbox": false,
+    "mailFromName": "{{ mail_from_name }}",
+    "mailFromEmail": "{{ mail_from_address }}",
+    "adminUserIds": [
+        1
+    ],
+    "siteBehaviorClasses": [],
+    "authClientCollection": [],
+    "blockedSubdomains": [
+        "www",
+        "rest",
+        "ftp",
+        "smtp",
+        "imap"
+    ],
+    "autoLoginDuration": 31536000,
+    "loginCaptcha": false,
+    "xelatexPath": "\/usr\/bin\/xelatex",
+    "xdvipdfmx": null,
+    "lualatexPath": null,
+    "pdfunitePath": null,
+    "pdfExportConcat": true,
+    "pdfExportIntegFrame": false,
+    "localMessages": [],
+    "imageMagickPath": null,
+    "sitePurgeAfterDays": null,
+    "binaryFilePath": null,
+    "viewCacheFilePath": null,
+    "mode": "production",
+    "updateKey": null,
+    "plugins": [],
+    "sitePlugins": [],
+    "mailService": {
+        "transport": "sendmail"
+    }
+}

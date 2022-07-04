@@ -1,0 +1,11 @@
+---
+# defaults file for antragsgruen
+antragsgruen_version: 4.10.1
+app_path: "~/antragsgruen-{{ antragsgruen_version }}"
+mail_from_name: 'Antragsgrün'
+mail_from_address: "antrag@{{ hostvars[inventory_hostname].domain }}"
+dbname: "{{ hostvars[inventory_hostname].mysql.table }}"
+dbuser: "{{ hostvars[inventory_hostname].mysql.user }}"
+dbpass: "{{ hostvars[inventory_hostname].mysql.pass }}"
+domain: "{{ hostvars[inventory_hostname].domain }}"
+seed: "{{ inventory_hostname | hash('md5') }}"

@@ -1,0 +1,39 @@
+---
+# tasks file for antragsgruen
+- name: download und upack antragsgruen build
+  unarchive:
+    remote_src: true
+    src: https://github.com/CatoTH/antragsgruen/releases/download/{{ antragsgruen_version }}/antragsgruen-{{ antragsgruen_version }}.tar.bz2
+    dest: ~/
+    creates: "{{ app_path }}"
+
+- name: disable web installer
+  file:
+    state: absent
+    dest: "{{ app_path }}/config/INSTALLING"
+
+- name: Find old antragsgruen folder / builds
+  find:
+    paths: ~/
+    patterns: "^antragsgruen-(?!{{ antragsgruen_version }}).*"
+    use_regex: true
+    file_type: directory
+  register: old_antragsgruen
+
+- name: Remove old antragsgruen folders
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  when: old_antragsgruen.files | length > 0
+  with_items: "{{ old_antragsgruen.files }}"
+
+- name: Link publicdir
+  file:
+    state: link
+    src: "{{ app_path }}/web"
+    dest: "~/doms/{{ hostvars[inventory_hostname].domain }}/htdocs-ssl"
+
+- name: Configure Instance
+  template:
+    dest: "{{ app_path }}/config/config.json"
+    src: config.json
